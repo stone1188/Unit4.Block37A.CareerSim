@@ -14,7 +14,7 @@ datasource db {
 }
 
 model User {
- id         Int      @id @default(autoincrement())
+ id         String   @id @default(uuid())
  username   String   @unique
  email      String   @unique
  password   String
@@ -23,18 +23,19 @@ model User {
 }
 
 model Item {
- id          Int      @id @default(autoincrement())
+ id          String   @id @default(uuid())
  name        String
  description String?
  reviews     Review[]
+ comments    Comment[]
 }
 
 model Review {
- id         Int      @id @default(autoincrement())
+ id         String   @id @default(uuid())
  createdAt  DateTime @default(now())
  updatedAt  DateTime @updatedAt
- userId     Int
- itemId     Int
+ userId     String
+ itemId     String
  rating     Int
  comment    String?
  user       User     @relation(fields: [userId], references: [id])
@@ -43,12 +44,14 @@ model Review {
 }
 
 model Comment {
- id         Int      @id @default(autoincrement())
+ id         String   @id @default(uuid())
  createdAt  DateTime @default(now())
  updatedAt  DateTime @updatedAt
- userId     Int
- reviewId   Int
+ userId     String
+ reviewId   String
+ itemId     String
  text       String
  user       User     @relation(fields: [userId], references: [id])
  review     Review   @relation(fields: [reviewId], references: [id])
+ item       Item     @relation(fields: [itemId], references: [id])
 }
