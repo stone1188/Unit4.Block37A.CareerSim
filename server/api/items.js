@@ -42,7 +42,7 @@ router.put("/:id", async (req, res, next) => {
             },
             data: {
             name: name,
-            desciption: description
+            description: description
             }
         });
         res.send(updateItem);
@@ -66,6 +66,21 @@ router.post("/newitem", async (req, res, next) => {
      } catch (error) {
           next(error);
      }
+});
+
+// delete an item
+router.delete("/:id", async (req, res, next) => {
+    try {
+        const deleteItem = await prisma.item.delete({
+            where: {
+                id: req.params.id,
+            },  
+        })
+        
+        res.status(200).json({message: 'item deleted', deleteItem});
+    } catch (error) {
+        next(error)
+    }
 });
 
 module.exports = router;

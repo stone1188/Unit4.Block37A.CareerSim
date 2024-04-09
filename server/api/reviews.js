@@ -1,10 +1,10 @@
 const { PrismaClient } = require("@prisma/client");
+const { route } = require("./user");
 const prisma = new PrismaClient();
 
 const router = require("express").Router();
 
 // create a review
-
 router.post("/", async (req, res, next) => {
      try {
 
@@ -24,6 +24,40 @@ router.post("/", async (req, res, next) => {
      }
 });
 
+// update a review
+router.put("/", async (req, res, next) => {
+     try {
+          const { rating, comment } = req.body;
+
+          const updateReview = await prisma.review.update({
+            where: {
+                id: req.params.id,
+            },
+            data: {
+                rating: rating,
+                comment: comment,
+            },
+          });
+          res.send(updateReview);
+     } catch (error) {
+          next(error);
+     }
+});
+
+// delete a review
+router.delete("/:id", async (req, res, next) => {
+    try {
+        const deleteReview = await prisma.review.delete({
+            where: {
+                id: req.params.id,
+            },  
+        })
+
+        res.status(200).json({message: 'review deleted', deleteReview});
+    } catch (error) {
+        next(error)
+    }
+});
 
 // write routes for editing and deleting reviews, 
 // ask for help tomorrow about generating multiple comments and reviews

@@ -39,17 +39,17 @@ async function seed() {
         //        data: {
         //             rating: 5,
         //             comment: faker.word.words(),
-        //             userId: "0e74ecfb-2832-4593-8a23-ec1c2dfd2668",
-        //             itemId: "0b290c19-e600-4614-9562-1f3929e9447d",
+        //             userId: "9d4e4fa3-cc7b-4bd5-9500-dd241283fa90",
+        //             itemId: "44114d97-4b4d-4810-80f5-919b21c9ae58",
         //        },
         //   });
 
         //   await prisma.comment.create({
         //        data: {
         //             text: faker.word.words(),
-        //             userId: "a842e1a4-54ea-493c-905b-48bc8b925000",
-        //             reviewId: "641fb4e2-8db9-44f0-9cef-6a6804787be6",
-        //             itemId: "0b290c19-e600-4614-9562-1f3929e9447d",
+        //             userId: "80df4e77-be43-40f6-bf68-836ff14881df",
+        //             reviewId: "5546b3fa-9d56-413b-8211-179650f8e53c",
+        //             itemId: "a5d801c4-4803-4898-b1aa-f7f95e2cc522",
         //        },
         //   });
 

@@ -30,6 +30,12 @@ const prisma = new PrismaClient().$extends({
                     return query(args);
                },
           },
+          comment: {
+               create({ model, operations, args, query }) {
+                    args.data = { ...args.data };
+                    return query(args);
+               },
+          },
      },
 });
 
