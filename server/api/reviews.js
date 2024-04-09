@@ -25,7 +25,7 @@ router.post("/", async (req, res, next) => {
 });
 
 // update a review
-router.put("/", async (req, res, next) => {
+router.put("/:id", async (req, res, next) => {
      try {
           const { rating, comment } = req.body;
 
@@ -38,6 +38,9 @@ router.put("/", async (req, res, next) => {
                 comment: comment,
             },
           });
+          if(!review) {
+            return res.status(404).send("No Review")
+          }
           res.send(updateReview);
      } catch (error) {
           next(error);
@@ -50,7 +53,10 @@ router.delete("/:id", async (req, res, next) => {
         const deleteReview = await prisma.review.delete({
             where: {
                 id: req.params.id,
-            },  
+            },
+            include: {
+                comments: true
+            }
         })
 
         res.status(200).json({message: 'review deleted', deleteReview});
@@ -59,8 +65,6 @@ router.delete("/:id", async (req, res, next) => {
     }
 });
 
-// write routes for editing and deleting reviews, 
-// ask for help tomorrow about generating multiple comments and reviews
-// remember to make comments
+
 
 module.exports = router;

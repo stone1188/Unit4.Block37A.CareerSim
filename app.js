@@ -10,6 +10,9 @@ const cors = require("cors");
 // Logging middleware
 app.use(morgan("dev"));
 
+
+
+
 // Body parsing middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

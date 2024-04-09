@@ -20,17 +20,18 @@ router.get("/:id", async (req, res, next) => {
 });
 
 // create a comment
-router.post("/", async (req, res, next) => {
+router.post("/review/:reviewId/comment", async (req, res, next) => {
      try {
 
-        const {reviewId, userId, itemId, rating, text } = req.body;
+        const { userId, itemId, text } = req.body;
+        const { reviewId } = req.params;
 
-          const comment = await prisma.review.create({
+          const comment = await prisma.comment.create({
+         
                data: {
                 reviewId: reviewId,
                 userId: userId,
                 itemId: itemId,
-                rating: rating,
                 text: text
                }
           });
@@ -41,11 +42,11 @@ router.post("/", async (req, res, next) => {
 });
 
 // update a comment
-router.put("/", async (req, res, next) => {
+router.put("/:id", async (req, res, next) => {
      try {
           const { text } = req.body;
 
-          const updateText = await prisma.review.update({
+          const updateText = await prisma.comment.update({
             where: {
                 id: req.params.id,
             },
@@ -68,7 +69,7 @@ router.delete("/:id", async (req, res, next) => {
             },  
         })
 
-        res.status(200).json({ message: "comment deleted", deleteText });
+        res.status(200).json({message: 'comment deleted', deleteText});
     } catch (error) {
         next(error)
     }
