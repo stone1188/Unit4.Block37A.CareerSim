@@ -21,8 +21,8 @@ router.get("/:id", async (req, res, next) => {
           next(error);
      }
 });
-
-// create a comment
+ 
+//  create a comment
 router.post("/review/:reviewId/", isLoggedIn, async (req, res, next) => {
      try {
 
