@@ -45,7 +45,6 @@ const findUserWithToken = async (token) => {
     try {
         const payload = await jwt.verify(token, process.env.JWT_SECRET);
         id = payload.userId;
-        console.log(payload)
     } catch (error) {
         console.error(error)
     }
