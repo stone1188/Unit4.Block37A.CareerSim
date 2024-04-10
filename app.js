@@ -37,7 +37,7 @@ app.use((req, res, next) => {
 });
 
 // Backend routes
-app.use("/auth", require("./server/auth"));
+app.use("/auth", require("./server/auth").router);
 app.use("/api", require("./server/api/index.js"));
 
 

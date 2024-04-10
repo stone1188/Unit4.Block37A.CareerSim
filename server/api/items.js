@@ -1,6 +1,7 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+// const { PrismaClient } = require("@prisma/client");
+// const prisma = new PrismaClient();
 
+const { prisma } = require("../db");
 const router = require("express").Router();
 
 // retrieve a list of items
@@ -76,7 +77,7 @@ router.delete("/:id", async (req, res, next) => {
                 id: req.params.id,
             },  
         })
-        
+
         res.status(200).json({message: 'item deleted', deleteItem});
     } catch (error) {
         next(error)

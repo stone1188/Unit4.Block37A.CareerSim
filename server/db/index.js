@@ -1,6 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 // const prisma = new PrismaClient();
 const bcrypt = require('bcrypt');
+const jwt = require("jsonwebtoken");
 
 const prisma = new PrismaClient().$extends({
      query: {
@@ -39,6 +40,33 @@ const prisma = new PrismaClient().$extends({
      },
 });
 
+const findUserWithToken = async (token) => {
+    let id;
+    try {
+        const payload = await jwt.verify(token, process.env.JWT_SECRET);
+        id = payload.userId;
+        console.log(payload)
+    } catch (error) {
+        console.error(error)
+    }
+
+    const user = await prisma.user.findUnique({
+        where: {
+            id: id,
+        },
+        select: {
+            id: true,
+            username: true,
+        }
+    })
+
+    if(!user) {
+        const error = new Error("Not authorized");
+        error.status = 401;
+        throw error
+    }
+    return user;
+}
 
 
-module.exports = {prisma};
+module.exports = {prisma, findUserWithToken};

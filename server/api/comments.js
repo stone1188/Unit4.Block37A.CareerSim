@@ -1,5 +1,8 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+// const { PrismaClient } = require("@prisma/client");
+// const prisma = new PrismaClient();
+const { isLoggedIn } = require("../auth");
+const { prisma } = require("../db");
+
 const router = require("express").Router();
 
 // get a comment
@@ -20,7 +23,7 @@ router.get("/:id", async (req, res, next) => {
 });
 
 // create a comment
-router.post("/review/:reviewId/comment", async (req, res, next) => {
+router.post("/review/:reviewId/", isLoggedIn, async (req, res, next) => {
      try {
 
         const { userId, itemId, text } = req.body;
@@ -42,7 +45,7 @@ router.post("/review/:reviewId/comment", async (req, res, next) => {
 });
 
 // update a comment
-router.put("/:id", async (req, res, next) => {
+router.put("/:id", isLoggedIn, async (req, res, next) => {
      try {
           const { text } = req.body;
 
@@ -61,7 +64,7 @@ router.put("/:id", async (req, res, next) => {
 });
 
 // delete a comment
-router.delete("/:id", async (req, res, next) => {
+router.delete("/:id", isLoggedIn, async (req, res, next) => {
     try {
         const deleteText = await prisma.review.delete({
             where: {
