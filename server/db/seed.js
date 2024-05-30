@@ -4,62 +4,96 @@
 const { prisma } = require("../db");
 const { faker } = require("@faker-js/faker");
 
-
-        
-
-        
-
 async function seed() {
      console.log("Its the SEED");
      try {
           // await prisma.user.deleteMany();
-        
-        
 
-        //   await prisma.user.createMany({
-        //         data: Array.from({ length: 15 }).map(() => {
-        //             return {
-        //                 username: faker.internet.userName(),
-        //                 email: faker.internet.email(),
-        //                 password: faker.internet.password(),
-        //             };
-        //         })   
-        //   });
+          const user = Array.from({ length: 20 }).map(() => ({
+               username: faker.internet.userName(),
+               email: faker.internet.email(),
+               password: faker.internet.password(),
+          }));
 
-        //   await prisma.item.createMany({
-        //        data: Array.from({ length: 15 }).map(() => {
-        //             return {
-        //                 name: faker.commerce.productName(),
-        //                 description: faker.commerce.productDescription()
-        //             };
-        //         })
-        //   });
+          const item = Array.from({ length: 10 }).map(() => ({
+               name: faker.commerce.product(),
+               description: faker.commerce.productDescription(),
+          }));
 
-        //   await prisma.review.create({
-        //        data: {
-        //             rating: 5,
-        //             comment: faker.word.words(),
-        //             userId: "9d4e4fa3-cc7b-4bd5-9500-dd241283fa90",
-        //             itemId: "44114d97-4b4d-4810-80f5-919b21c9ae58",
-        //        },
-        //   });
+          await prisma.Item.createMany({ data: item });
+          await prisma.User.createMany({ data: user });
 
-        //   await prisma.comment.create({
-        //        data: {
-        //             text: faker.word.words(),
-        //             userId: "80df4e77-be43-40f6-bf68-836ff14881df",
-        //             reviewId: "5546b3fa-9d56-413b-8211-179650f8e53c",
-        //             itemId: "a5d801c4-4803-4898-b1aa-f7f95e2cc522",
-        //        },
-        //   });
+          const Items = await prisma.Item.findMany();
+          const Users = await prisma.User.findMany();
 
+          const randomUserIdResult =
+               await prisma.$queryRaw`SELECT id FROM "User" ORDER BY RANDOM() LIMIT 3;`;
 
+          const randomItemId =
+               await prisma.$queryRaw`SELECT id FROM "Item" ORDER BY RANDOM() LIMIT 1;`;
+     
+
+          Items.forEach(async (item) => {
+               await prisma.item.update({
+                    where: {
+                         id: item.id,
+                    },
+                    data: {
+                         reviews: {
+                              createMany: {
+                                   data: Array.from({ length: 2 }).map(() => ({
+                                        rating: faker.number.int({
+                                             min: 1,
+                                             max: 5,
+                                        }),
+                                        comment: faker.word.words(),
+                                        userId: randomUserIdResult[0].id,
+                                        
+                                   })),
+                              },
+                         },
+                    },
+               });
+          });
+
+          // const Reviews = await prisma.Review.findMany();
+          // Reviews.forEach(async (review) => {
+          //      await prisma.review.update({
+          //           where: {
+          //                id: review.id,
+          //           },
+          //           data: {
+          //                comments: {
+          //                     createMany: {
+          //                          data: Array.from({ length: 1 }).map(() => ({
+          //                               text: faker.word.words(),
+          //                               userId: randomUserIdResult[1].id,
+          //                               itemId: randomItemId[0].id
+          //                          })),
+          //                     },
+          //                },
+          //           },
+          //      });
+          // })
+
+         
           console.log("things were made");
      } catch (error) {
           console.error(error);
      }
 }
 
-seed();
+
+
+
+seed()
+     .then(async () => {
+          await prisma.$disconnect();
+     })
+     .catch(async (e) => {
+          console.error(e);
+          await prisma.$disconnect();
+          process.exit(1);
+     });
 
 module.exports = seed;
